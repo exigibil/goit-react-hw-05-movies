@@ -28,7 +28,7 @@ function GetTrading() {
             }
         }
         fetchTrending();
-    }, []);
+    }, [URL, apiKey]);
 
     if (loading) {
         return <div>Loading...</div>
