@@ -1,0 +1,109 @@
+.searchBar {
+    top: 0;
+    left: 0;
+    position: relative;
+    z-index: 1100;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    min-height: 64px;
+    padding-left: 24px;
+    padding-bottom: 12px;
+    color: #fff;
+    background-color: #333333;
+ 
+  
+    .appName {
+      color: #ffffff;
+      font-size: 20px;
+      font-weight: 700;
+      display: flex;
+      justify-content: center;
+      position: absolute;
+      left: 40px;
+    }
+  
+    .searchBarContainer {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+      width: 100%;
+      max-width: 600px;
+      position: relative;
+      z-index: 1000;
+      
+  
+      .searchBarForm {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        max-width: 600px;
+        background-color: rgb(255, 255, 255);
+        border-radius: 3px;
+        overflow: hidden;
+      }
+      .button {
+        border: 0;
+        background-color: #cfcfcf;
+        padding: 8px 16px;
+        border-radius: 2px;
+        transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+        text-align: center;
+        display: inline-block;
+        color: #ffffff;
+        border: 0;
+        cursor: pointer;
+        box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2),
+          0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+      }
+  
+      .button:hover {
+        color: #1f1f1f;
+        background-color: #bebebe;
+      }
+      .searchIcon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        border: 0;
+        width: 20px;
+        height: 20px;
+      }
+  
+      .searchBarInput {
+        width: 100%;
+        padding: 5px;
+        align-items: center;
+        max-width: 600px;
+        overflow: hidden;
+        border: 0;
+      }
+  
+      .searchBarInput:focus {
+        outline: groove #0457a5;
+        outline-width: 0;
+        outline-offset: 1px;
+      }
+    }
+  }
+  
+  @media only screen and (max-width: 800px) {
+      .searchBar {
+        flex-direction: column; 
+        align-items: flex-start; 
+        padding-right: 10px;
+        padding-left: 10px;
+      }
+    
+      .searchBar > .appName {
+        position: static; 
+        margin-bottom: 10px; 
+      }
+    
+      .searchBarContainer {
+        max-width: 100%;
+      }
+    }

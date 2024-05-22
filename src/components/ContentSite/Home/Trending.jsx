@@ -1,6 +1,7 @@
 import styles from "./Trending.module.css"
 import { API_KEY, baseURL } from '../../API/apikey';
 import { useEffect, useState  } from "react";
+import { Link } from 'react-router-dom';
 
 function GetTrading() {
     const apiKey = API_KEY
@@ -38,12 +39,13 @@ function GetTrading() {
 
     
     return (
-        <div>
+        <div className={styles.containerTrading}>
             <h1 className={styles.title}>Trending Movies Today</h1>
             <ul className={styles.trending}>
                {movies.map(movie => (
                 <li key={movie.id} className={styles.trendingItem}> 
                 <img src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} alt={movie.title} />
+                <Link to="/">{movie.title}</Link>
                 </li>
                 
                ))}
