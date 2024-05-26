@@ -4,7 +4,7 @@ import { API_KEY, baseURL } from '../../API/apikey';
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
-function SearchMovie({ query }) {
+function SearchMovie({ query, onSelectMovie  }) {
   const apiKey = API_KEY;
   const URL = baseURL;
   const [movies, setMovies] = useState([]);
@@ -32,6 +32,9 @@ function SearchMovie({ query }) {
     setCurrentPage(currentPage - 1);
   };
 
+  const handleMovieClick = (movieId) => {
+    onSelectMovie(movieId); 
+  };
 
   return (
     <div>
@@ -39,30 +42,29 @@ function SearchMovie({ query }) {
         <p>Loading...</p>
       ) : (
         <>
-          <div className={styles.containerTrading}>
-            <ul className={styles.trending}>
-              {movies.map(movie => (
-                <li key={movie.id} className={styles.trendingItem}>
-                   <Link to={`/movies/${movie.id}`}>
-                   <div>
-                   <img
+        <div className={styles.containerTrading}>
+          <ul className={styles.trending}>
+            {movies.map(movie => (
+              <li key={movie.id} className={styles.trendingItem}>
+                <Link to={`/movies/${movie.id}`} onClick={() => handleMovieClick(movie.id)}> {/* Use onClick to handle movie click */}
+                  <div>
+                    <img
                       src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
                       alt={movie.title}
                     />
-                   </div>
-                   <div>{movie.title}</div>
-                   
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className={styles.containerBtn}>
-            <button className={styles.buttonPrev}   onClick={handlePrevPage} disabled={currentPage === 1} > Prev </button>
-            <span>{currentPage}</span>
-            <button className={styles.buttonNext}  onClick={handleNextPage} > Next </button>
-          </div>
-        </>
+                  </div>
+                  <div>{movie.title}</div>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className={styles.containerBtn}>
+          <button className={styles.buttonPrev} onClick={handlePrevPage} disabled={currentPage === 1}> Prev </button>
+          <span>{currentPage}</span>
+          <button className={styles.buttonNext} onClick={handleNextPage}> Next </button>
+        </div>
+      </>
       )}
     </div>
   );
@@ -70,6 +72,7 @@ function SearchMovie({ query }) {
 
 SearchMovie.propTypes = {
   query: PropTypes.string.isRequired,
+  onSelectMovie: PropTypes.func.isRequired,
 };
 
 export default SearchMovie;
