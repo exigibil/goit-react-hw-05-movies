@@ -1,8 +1,9 @@
+import React, { useEffect, useState } from 'react';
 import { API_KEY, baseURL } from '../../API/apikey';
-import { useEffect, useState } from 'react';
+import { useParams } from'react-router-dom';
 
-function MovieDetails(props) {
-  const { movie_id } = props;
+function MovieDetails() {
+  const { movieId } = useParams(); 
   const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -13,23 +14,41 @@ function MovieDetails(props) {
     const fetchMovieDetails = async () => {
       try {
         const response = await fetch(
-          `${URL}/movie/${movie_id}?api_key=${apiKey}&language=en-US`
+          `${URL}/movie/${movieId}?api_key=${apiKey}&language=en-US`
         );
         if (!response.ok) {
           throw new Error(`Network response was not ok (${response.status})`);
         }
         const data = await response.json();
-        setMovie(data);
-        setLoading(false);
+        
+        const cast = await fetchCast(movieId); 
+
+        setMovie({ ...data, cast });
       } catch (error) {
         setError(error.message);
-        setLoading(false);
       } finally {
         setLoading(false);
       }
     };
     fetchMovieDetails();
-  }, [movie_id, URL, apiKey]);
+  }, [movieId, URL, apiKey]); 
+
+  
+  const fetchCast = async (movieId) => { 
+    try {
+      const response = await fetch(
+        `${URL}/movie/${movieId}/credits?api_key=${apiKey}`
+      );
+      if (!response.ok) {
+        throw new Error(`Network response was not ok (${response.status})`);
+      }
+      const data = await response.json();
+    
+      return data.cast;
+    } catch (error) {
+      throw new Error(`Error fetching cast: ${error.message}`);
+    }
+  };
 
   if (loading) {
     return <p>Loading...</p>;
@@ -48,17 +67,24 @@ function MovieDetails(props) {
       <div>
         <h1>{movie.title}</h1>
         <p>{movie.overview}</p>
-        <p>{movie.genres}</p>
+  
         <img
           src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
           alt={movie.title}
         />
       </div>
-      <div>
-        <p>Additional Information</p>
-        <p>{movie.cast}</p>
-        <p>{movie.reviews}</p>
-      </div>
+     
+    
+      {movie.cast && (
+        <div>
+          <h2>Cast</h2>
+          <ul>
+            {movie.cast.map(actor => (
+              <li key={actor.id}>{actor.name}</li>
+            ))}
+          </ul>
+        </div>
+      )}
     </>
   );
 }

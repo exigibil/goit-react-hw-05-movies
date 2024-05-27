@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import Navbar from '../Navbar/Navbar';
 import SearchBar from '../SearchBar/SearchBar';
 
@@ -16,9 +16,11 @@ function Movies() {
       <Navbar />
       <div>
         <SearchBar onSearch={handleSearch} />
-        <React.Suspense fallback={<p>Loading...</p>}>
-          {searchQuery && <SearchMovie query={searchQuery} />}
-        </React.Suspense>
+        <Suspense fallback={<p>Loading...</p>}>
+          {searchQuery && (
+            <SearchMovie query={searchQuery} />
+          )}
+        </Suspense>
       </div>
     </div>
   );

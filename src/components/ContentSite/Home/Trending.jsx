@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Link } from 'react-router-dom';
 import styles from "./Trending.module.css"
 import { API_KEY, baseURL } from '../../API/apikey';

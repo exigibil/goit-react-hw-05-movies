@@ -23,7 +23,7 @@ function SearchMovie({ query, onSelectMovie  }) {
     } else {
       setMovies([]);
     }
-  }, [query, currentPage]);
+  }, [query, currentPage, URL, apiKey]);
 
   const handleNextPage = () => {
     setCurrentPage(currentPage + 1);
