@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { API_KEY, baseURL } from '../../API/apikey';
 import { useParams } from'react-router-dom';
+import styles from "./MovieDetails.module.css"
 
 function MovieDetails() {
   const { movieId } = useParams(); 
@@ -64,7 +65,7 @@ function MovieDetails() {
 
   return (
     <>
-      <div>
+      <div className={styles.detailContainer}>
         <h1>{movie.title}</h1>
         <p>{movie.overview}</p>
   
@@ -72,9 +73,7 @@ function MovieDetails() {
           src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
           alt={movie.title}
         />
-      </div>
-     
-    
+
       {movie.cast && (
         <div>
           <h2>Cast</h2>
@@ -85,6 +84,10 @@ function MovieDetails() {
           </ul>
         </div>
       )}
+      </div>
+     
+    
+    
     </>
   );
 }

@@ -1,20 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import Navbar from '../Navbar/Navbar';
 import SearchBar from '../SearchBar/SearchBar';
-import MovieDetails from "../MovieDetails/MovieDetails";
+
+const SearchMovie = React.lazy(() => import('../Movies/SearchMovie'));
+const MovieDetails = React.lazy(() => import("../MovieDetails/MovieDetails"));
 
 function MoviesDetails() {
-  const [selectedMovieId, setSelectedMovieId] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const handleSearch = (query, movieId) => {
-    setSelectedMovieId(movieId); 
+  const handleSearch = (query) => {
+    setSearchQuery(query);
   };
 
   return (
     <div>
       <Navbar />
       <div>
-        <SearchBar onSearch={(query, movieId) => handleSearch(query, movieId)} />
+      <SearchBar onSearch={handleSearch} />
+      <Suspense fallback={<p>Loading...</p>}>
+          {searchQuery && (
+            <SearchMovie query={searchQuery} />
+          )}
+        </Suspense>
         <MovieDetails />
       </div>
     </div>
