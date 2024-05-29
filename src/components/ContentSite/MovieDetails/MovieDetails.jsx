@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { API_KEY, baseURL } from '../../API/apikey';
-import { useParams } from'react-router-dom';
-import styles from "./MovieDetails.module.css"
+import { useParams } from 'react-router-dom';
+import styles from './MovieDetails.module.css';
+import { TiArrowBackOutline } from 'react-icons/ti';
 
 function MovieDetails() {
-  const { movieId } = useParams(); 
+  const { movieId } = useParams();
   const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -21,8 +22,8 @@ function MovieDetails() {
           throw new Error(`Network response was not ok (${response.status})`);
         }
         const data = await response.json();
-        
-        const cast = await fetchCast(movieId); 
+
+        const cast = await fetchCast(movieId);
 
         setMovie({ ...data, cast });
       } catch (error) {
@@ -32,10 +33,9 @@ function MovieDetails() {
       }
     };
     fetchMovieDetails();
-  }, [movieId, URL, apiKey]); 
+  }, [movieId, URL, apiKey]);
 
-  
-  const fetchCast = async (movieId) => { 
+  const fetchCast = async movieId => {
     try {
       const response = await fetch(
         `${URL}/movie/${movieId}/credits?api_key=${apiKey}`
@@ -44,7 +44,7 @@ function MovieDetails() {
         throw new Error(`Network response was not ok (${response.status})`);
       }
       const data = await response.json();
-    
+
       return data.cast;
     } catch (error) {
       throw new Error(`Error fetching cast: ${error.message}`);
@@ -65,29 +65,61 @@ function MovieDetails() {
 
   return (
     <>
-      <div className={styles.detailContainer}>
-        <h1>{movie.title}</h1>
-        <p>{movie.overview}</p>
-  
-        <img
-          src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
-          alt={movie.title}
-        />
-
-      {movie.cast && (
-        <div>
-          <h2>Cast</h2>
-          <ul>
-            {movie.cast.map(actor => (
-              <li key={actor.id}>{actor.name}</li>
-            ))}
-          </ul>
+      <div className={styles.topContainer}>
+        <div className={styles.buttonContainer}>
+          <button className={styles.buttonBack}>
+            <TiArrowBackOutline /> Back
+          </button>
         </div>
-      )}
+        <div  className={styles.topImgContainer}>
+          <div>
+            <img
+              src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
+              alt={movie.title}
+            />
+          </div>
+
+          <div className={styles.textContainer} >
+            <h1>{movie.title} <span> ({movie.release_date.split('-')[0]})</span> </h1>
+            <h3>Overview</h3>
+            <p>{movie.overview}</p>
+            <h3>Genres</h3>
+            <p>
+              {' '}
+              {movie.genres.map((genre, index) => (
+                <span key={index}>
+                  {genre.name}
+                  {index < movie.genres.length - 1 ? ', ' : ''}
+                </span>
+              ))}
+            </p>
+          </div>
+        </div>
       </div>
-     
-    
-    
+      <div className={styles.lowContainer}>
+        <div className={styles.horizontalBar}></div>
+        <p>Additional Information</p>
+        <ul>
+          <li>
+            <a href="#">Cast</a>
+          </li>
+          <li>
+            <a href="#">Review</a>
+          </li>
+        </ul>
+
+        <div className={styles.horizontalBar}></div>
+        {movie.cast && (
+          <div>
+            <h2>Cast</h2>
+            <ul>
+              {movie.cast.map(actor => (
+                <li key={actor.id}>{actor.name}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
     </>
   );
 }
