@@ -1,14 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { API_KEY, baseURL } from '../../API/apikey';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import styles from './MovieDetails.module.css';
 import { TiArrowBackOutline } from 'react-icons/ti';
+import Cast from '../Pages/Cast';
+import Reviews from '../Pages/Reviews';
 
 function MovieDetails() {
   const { movieId } = useParams();
   const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showCast, setShowCast] = useState(false);
+  const [showReviews, setShowReviews] = useState(false);
+  const [reviews, setReviews] = useState([]); // New state for reviews
   const apiKey = API_KEY;
   const URL = baseURL;
 
@@ -24,8 +29,10 @@ function MovieDetails() {
         const data = await response.json();
 
         const cast = await fetchCast(movieId);
+        const fetchedReviews = await fetchReviews(movieId); // Fetch reviews
 
         setMovie({ ...data, cast });
+        setReviews(fetchedReviews); // Set reviews state
       } catch (error) {
         setError(error.message);
       } finally {
@@ -35,7 +42,7 @@ function MovieDetails() {
     fetchMovieDetails();
   }, [movieId, URL, apiKey]);
 
-  const fetchCast = async movieId => {
+  const fetchCast = async (movieId) => {
     try {
       const response = await fetch(
         `${URL}/movie/${movieId}/credits?api_key=${apiKey}`
@@ -48,6 +55,22 @@ function MovieDetails() {
       return data.cast;
     } catch (error) {
       throw new Error(`Error fetching cast: ${error.message}`);
+    }
+  };
+
+  const fetchReviews = async (movieId) => { 
+    try {
+      const response = await fetch(
+        `${URL}/movie/${movieId}/reviews?api_key=${apiKey}&language=en-US&page=1`
+      );
+      if (!response.ok) {
+        throw new Error(`Network response was not ok (${response.status})`);
+      }
+      const data = await response.json();
+
+      return data.results;
+    } catch (error) {
+      throw new Error(`Error fetching reviews: ${error.message}`);
     }
   };
 
@@ -67,11 +90,13 @@ function MovieDetails() {
     <>
       <div className={styles.topContainer}>
         <div className={styles.buttonContainer}>
-          <button className={styles.buttonBack}>
-            <TiArrowBackOutline /> Back
-          </button>
+          <Link to="/movies">
+            <button className={styles.buttonBack}>
+              <TiArrowBackOutline /> Back
+            </button>
+          </Link>
         </div>
-        <div  className={styles.topImgContainer}>
+        <div className={styles.topImgContainer}>
           <div>
             <img
               src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
@@ -79,13 +104,14 @@ function MovieDetails() {
             />
           </div>
 
-          <div className={styles.textContainer} >
-            <h1>{movie.title} <span> ({movie.release_date.split('-')[0]})</span> </h1>
+          <div className={styles.textContainer}>
+            <h1>
+              {movie.title} <span> ({movie.release_date.split('-')[0]})</span>
+            </h1>
             <h3>Overview</h3>
             <p>{movie.overview}</p>
             <h3>Genres</h3>
             <p>
-              {' '}
               {movie.genres.map((genre, index) => (
                 <span key={index}>
                   {genre.name}
@@ -100,25 +126,34 @@ function MovieDetails() {
         <div className={styles.horizontalBar}></div>
         <p>Additional Information</p>
         <ul>
-          <li>
-            <a href="#">Cast</a>
+        <li>
+            <Link
+              to={`/movies/${movieId}/cast`}
+              onClick={() => {
+                setShowCast(true);
+                setShowReviews(false);
+              }}
+            >
+              Cast
+            </Link>
           </li>
           <li>
-            <a href="#">Review</a>
+            <Link
+              to={`/movies/${movieId}/reviews`}
+              onClick={() => {
+                setShowReviews(true);
+                setShowCast(false); 
+              }}
+            >
+              Reviews
+            </Link>
           </li>
         </ul>
 
         <div className={styles.horizontalBar}></div>
-        {movie.cast && (
-          <div>
-            <h2>Cast</h2>
-            <ul>
-              {movie.cast.map(actor => (
-                <li key={actor.id}>{actor.name}</li>
-              ))}
-            </ul>
-          </div>
-        )}
+
+        {showCast && <Cast cast={movie.cast} />}
+        {showReviews && <Reviews reviews={reviews} />}
       </div>
     </>
   );
