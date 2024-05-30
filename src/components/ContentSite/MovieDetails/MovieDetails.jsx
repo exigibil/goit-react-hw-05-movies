@@ -108,6 +108,7 @@ function MovieDetails() {
             <h1>
               {movie.title} <span> ({movie.release_date.split('-')[0]})</span>
             </h1>
+            <p>User Score {movie.score}</p>
             <h3>Overview</h3>
             <p>{movie.overview}</p>
             <h3>Genres</h3>
