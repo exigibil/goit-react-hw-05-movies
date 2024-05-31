@@ -68,3 +68,34 @@
     height: 2px;
     background-color: #333;
 }
+
+ .castContainer {
+    display: flex;
+    flex-direction: column;
+
+    .castlistContainer {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 5px;
+        
+
+        .castList {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            align-items: center;
+            width: 200px;
+            height: 200px;
+            text-align: center;
+            
+
+            img {
+                width: 100px;
+                height: 150px;
+            }
+        }
+        
+        
+    }
+ }
