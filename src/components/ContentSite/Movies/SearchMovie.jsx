@@ -46,7 +46,7 @@ function SearchMovie({ query, onSelectMovie  }) {
           <ul className={styles.trending}>
             {movies.map(movie => (
               <li key={movie.id} className={styles.trendingItem}>
-                <Link to={`/movies/${movie.id}`} onClick={() => handleMovieClick(movie.id)}> {/* Use onClick to handle movie click */}
+                <Link to={`/movies/${movie.id}?query=${query}`} onClick={() => handleMovieClick(movie.id)}> {/* Use onClick to handle movie click */}
                   <div>
                     <img
                       src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}

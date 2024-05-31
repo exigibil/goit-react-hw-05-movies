@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { API_KEY, baseURL } from '../../API/apikey';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useLocation } from 'react-router-dom';
 import styles from './MovieDetails.module.css';
 import { TiArrowBackOutline } from 'react-icons/ti';
 import Cast from '../Pages/Cast';
@@ -13,9 +13,12 @@ function MovieDetails() {
   const [error, setError] = useState(null);
   const [showCast, setShowCast] = useState(false);
   const [showReviews, setShowReviews] = useState(false);
-  const [reviews, setReviews] = useState([]); // New state for reviews
+  const [reviews, setReviews] = useState([]);
+  const location = useLocation();
+  const query = new URLSearchParams(location.search).get('query');
   const apiKey = API_KEY;
   const URL = baseURL;
+  const destinationUrl = location.state?.from === '/' ? '/' : '/movies';
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
@@ -29,10 +32,9 @@ function MovieDetails() {
         const data = await response.json();
 
         const cast = await fetchCast(movieId);
-        const fetchedReviews = await fetchReviews(movieId); // Fetch reviews
-
+        const fetchedReviews = await fetchReviews(movieId);
         setMovie({ ...data, cast });
-        setReviews(fetchedReviews); // Set reviews state
+        setReviews(fetchedReviews);
       } catch (error) {
         setError(error.message);
       } finally {
@@ -42,7 +44,7 @@ function MovieDetails() {
     fetchMovieDetails();
   }, [movieId, URL, apiKey]);
 
-  const fetchCast = async (movieId) => {
+  const fetchCast = async movieId => {
     try {
       const response = await fetch(
         `${URL}/movie/${movieId}/credits?api_key=${apiKey}`
@@ -58,7 +60,7 @@ function MovieDetails() {
     }
   };
 
-  const fetchReviews = async (movieId) => { 
+  const fetchReviews = async movieId => {
     try {
       const response = await fetch(
         `${URL}/movie/${movieId}/reviews?api_key=${apiKey}&language=en-US&page=1`
@@ -90,7 +92,7 @@ function MovieDetails() {
     <>
       <div className={styles.topContainer}>
         <div className={styles.buttonContainer}>
-          <Link to="/movies">
+          <Link to={destinationUrl}>
             <button className={styles.buttonBack}>
               <TiArrowBackOutline /> Back
             </button>
@@ -127,7 +129,7 @@ function MovieDetails() {
         <div className={styles.horizontalBar}></div>
         <p>Additional Information</p>
         <ul>
-        <li>
+          <li>
             <Link
               to={`/movies/${movieId}/cast`}
               onClick={() => {
@@ -143,7 +145,7 @@ function MovieDetails() {
               to={`/movies/${movieId}/reviews`}
               onClick={() => {
                 setShowReviews(true);
-                setShowCast(false); 
+                setShowCast(false);
               }}
             >
               Reviews
