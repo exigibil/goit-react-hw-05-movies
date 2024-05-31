@@ -9,6 +9,7 @@ function Reviews({ reviews }) {
         <ul>
           {reviews.map((review) => (
             <li key={review.id}>
+              <p><b>Author: {review.author}</b></p>
               <p>{review.content}</p>
             </li>
           ))}
