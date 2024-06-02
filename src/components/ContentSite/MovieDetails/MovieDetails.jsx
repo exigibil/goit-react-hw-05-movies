@@ -110,7 +110,7 @@ function MovieDetails() {
             <h1>
               {movie.title} <span> ({movie.release_date.split('-')[0]})</span>
             </h1>
-            <p>User Score {movie.score}</p>
+            <p>User Score: <b>{movie.vote_average.toFixed(1)}</b> / Votes: {movie.vote_count}</p>
             <h3>Overview</h3>
             <p>{movie.overview}</p>
             <h3>Genres</h3>
