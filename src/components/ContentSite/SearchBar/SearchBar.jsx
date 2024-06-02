@@ -2,16 +2,13 @@ import React, { useState } from "react";
 import { SlMagnifier } from "react-icons/sl";
 import styles from "./SearchBar.module.css";
 import PropTypes from "prop-types";
-import { useNavigate } from "react-router-dom";
 
 function SearchBar({ onSearch }) {
   const [searchItem, setSearchItem] = useState("");
-  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     onSearch(searchItem);
-   navigate(`/movies?query=${searchItem}`);
   };
 
   return (
@@ -28,6 +25,7 @@ function SearchBar({ onSearch }) {
             placeholder="Search for movies..."
             value={searchItem}
             onChange={(e) => setSearchItem(e.target.value)}
+            aria-label="Search movies"
           />
         </form>
       </div>

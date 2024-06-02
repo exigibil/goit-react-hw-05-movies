@@ -1,14 +1,26 @@
-import React, { useState, Suspense } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '../Navbar/Navbar';
 import SearchBar from '../SearchBar/SearchBar';
+import SearchMovie from '../Movies/SearchMovie';
+import { useLocation, useNavigate } from "react-router-dom";
+import BackButton from '../BackButton/BackButton'; 
 
-const SearchMovie = React.lazy(() => import('../Movies/SearchMovie'));
-
-function Movies() {
+const Movies = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const userSearch = params.get('UserSearch');
+    if (userSearch) {
+      setSearchQuery(userSearch);
+    }
+  }, [location.search]);
 
   const handleSearch = (query) => {
     setSearchQuery(query);
+    navigate(`/movies?UserSearch=${query.toLowerCase()}`);
   };
 
   return (
@@ -16,14 +28,12 @@ function Movies() {
       <Navbar />
       <div>
         <SearchBar onSearch={handleSearch} />
-        <Suspense fallback={<p>Loading...</p>}>
-          {searchQuery && (
-            <SearchMovie query={searchQuery} />
-          )}
-        </Suspense>
+        {searchQuery && (
+          <SearchMovie query={searchQuery} />
+        )}
       </div>
     </div>
   );
-}
+};
 
 export default Movies;

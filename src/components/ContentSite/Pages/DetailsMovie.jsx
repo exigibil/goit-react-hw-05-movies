@@ -7,9 +7,11 @@ const MovieDetails = React.lazy(() => import("../MovieDetails/MovieDetails"));
 
 function MoviesDetails() {
   const [searchQuery, setSearchQuery] = useState('');
+ 
 
   const handleSearch = (query) => {
     setSearchQuery(query);
+   
   };
 
   return (
